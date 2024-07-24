@@ -30,7 +30,7 @@ object st_river_r {
     var collect_tm = "2023-04-24"
 
     if(is_current.equals("true")){
-      val his_max_tm_sql_tb = """ select max(tm)-0.1 as tm from md.st_river_r  """
+      val his_max_tm_sql_tb = """ select max(tm)-0.1 as tm from md.st_river_r where data_source is null or data_source in('dzp_sq','lk') """
       val lastest_tm_df = readMD(spark,his_max_tm_sql_tb)
       val lastest_tm_cache = lastest_tm_df
 
