@@ -100,7 +100,8 @@ object st_river_r {
         col("LEIXING").alias("data_type").cast("int"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)")
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),
+        lit("dzp_sq").alias("data_source").cast("string")
       )
 
 
@@ -124,7 +125,8 @@ object st_river_r {
         lit(null).alias("data_type").cast("int"),
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
-        lit(null).alias("yjll").cast("decimal(7,3)")
+        lit(null).alias("yjll").cast("decimal(7,3)"),
+        lit("lk").alias("data_source").cast("string")
       ).join(sqk, Seq("guid", "st_code","tm"), "left_anti")
 
     val result = sqk.unionAll(res_rz)
