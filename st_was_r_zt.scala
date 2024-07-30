@@ -141,7 +141,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         lit(null).alias("zmqb").cast("string"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)")，
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),
         lit("dzp_sq").alias("data_source").cast("string"),
         col("JJSW").alias("jjsw").cast("decimal(7,3)"),
         col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
@@ -173,7 +173,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         lit(null).alias("zmqb").cast("string"),
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
-        lit(null).alias("yjll").cast("decimal(7,3)")，
+        lit(null).alias("yjll").cast("decimal(7,3)"),
         lit("lk").alias("data_source").cast("string"),
         lit(null).alias("jjsw").cast("decimal(7,3)"),
         lit(null).alias("djszgc").cast("decimal(7,3)"),
