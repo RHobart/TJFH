@@ -136,7 +136,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         col("LEIXING").alias("data_type").cast("int"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)"),,
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),
         col("JJSW").alias("jjsw").cast("decimal(7,3)"),
         col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
         col("UP_SW").alias("upz_gc").cast("decimal(7,3)"),
