@@ -74,7 +74,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
     }
 
     import spark.implicits._
-    val st_list = readMD(spark,"select * from md.att_st_base").filter(col("st_type").isin("DP"))
+    val st_list = readMD(spark,"select * from md.att_st_base  where st_extsttp like '%DP%' ")
       .select(col("st_code"))
     val broadcastCodes: Broadcast[Array[String]] = spark.sparkContext.broadcast(st_list.as[String].collect())
 
@@ -102,7 +102,12 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         lit(1).alias("data_type").cast("int"),
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
-        lit(null).alias("yjll").cast("decimal(7,3)")
+        lit(null).alias("yjll").cast("decimal(7,3)"),
+        lit(null).alias("jjsw").cast("decimal(7,3)"),
+        lit(null).alias("djszgc").cast("decimal(7,3)"),
+        lit(null).alias("upz_gc").cast("decimal(7,3)"),
+        lit(null).alias("dwz_gc").cast("decimal(7,3)"),
+        lit(null).alias("exkey").cast("string")
       )
 
     val prop = new Properties()
@@ -116,7 +121,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         col("ZH").alias("guid"),
         col("ZH").alias("st_code"),
         col("YMDHM").alias("tm").cast("timestamp"),
-        col("UP_SW").alias("ppupz").cast("decimal(7,3)"),
+        (col("UP_SW")+col("DJSZGC")).alias("ppupz").cast("decimal(7,3)"),
         lit(null).alias("ppdwz").cast("decimal(7,3)"),
         lit(null).alias("omcn").cast("decimal(3,0)"),
         lit(null).alias("ompwr").cast("decimal(5,0)"),
@@ -126,12 +131,17 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         lit(null).alias("ppdwwptn").cast("string"),
         lit(null).alias("msqmt").cast("string"),
         lit(null).alias("pdchcd").cast("string"),
-        lit(null).alias("data_source").cast("string"),
+        lit("dzp_sq").alias("data_source").cast("string"),
         lit(current_timestamp()).alias("eff_time"),
         col("LEIXING").alias("data_type").cast("int"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)")
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),,
+        col("JJSW").alias("jjsw").cast("decimal(7,3)"),
+        col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
+        col("UP_SW").alias("upz_gc").cast("decimal(7,3)"),
+        lit(null).alias("dwz_gc").cast("decimal(7,3)"),
+        col("EXKEY").alias("exkey").cast("string")
     )
 
 
@@ -150,12 +160,17 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
       col("PPDWWPTN").alias("ppdwwptn").cast("string"),
       col("MSQMT").alias("msqmt").cast("string"),
       col("PDCHCD").alias("pdchcd").cast("string"),
-      lit(null).alias("data_source").cast("string"),
+      lit("lk").alias("data_source").cast("string"),
       lit(current_timestamp()).alias("eff_time"),
       lit(1).alias("data_type").cast("int"),
       lit(null).alias("q_avg").cast("decimal(7,3)"),
       lit(null).alias("xjll").cast("decimal(7,3)"),
-      lit(null).alias("yjll").cast("decimal(7,3)")
+      lit(null).alias("yjll").cast("decimal(7,3)"),
+      lit(null).alias("jjsw").cast("decimal(7,3)"),
+      lit(null).alias("djszgc").cast("decimal(7,3)"),
+      lit(null).alias("upz_gc").cast("decimal(7,3)"),
+      lit(null).alias("dwz_gc").cast("decimal(7,3)"),
+      lit(null).alias("exkey").cast("string")
     )
 
     pump_rz.show()
