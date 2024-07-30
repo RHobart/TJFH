@@ -108,7 +108,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
       col("JJSW").alias("jjsw").cast("decimal(7,3)"),
       col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
       col("UP_SW").alias("z_gc").cast("decimal(7,3)"),
-      col("EXKEY").alias("exkey").cast("string")，
+      col("EXKEY").alias("exkey").cast("string"),
       lit("dzp_sq").alias("data_source").cast("string"),
     )
 
@@ -134,7 +134,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
       lit(null).alias("jjsw").cast("decimal(7,3)"),
       lit(null).alias("djszgc").cast("decimal(7,3)"),
       lit(null).alias("z_gc").cast("decimal(7,3)"),
-      lit(null).alias("exkey").cast("string")，
+      lit(null).alias("exkey").cast("string"),
       lit("lk").alias("data_source").cast("string"),
     ).join(sqk, Seq("guid", "st_code","tm"), "left_anti")
 
