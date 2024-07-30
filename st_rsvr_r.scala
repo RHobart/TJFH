@@ -68,7 +68,7 @@ object st_rsvr_r {
     }
     import spark.implicits._
 
-    val st_list = readMD(spark,"select * from md.att_st_base").filter(col("st_type").isin("RR"))
+    val st_list = readMD(spark,"select * from md.att_st_base  where st_extsttp like '%RR%' ")
       .select(col("st_code"))
 
     println(st_list.count())
@@ -86,7 +86,7 @@ object st_rsvr_r {
         col("ZH").alias("guid"),
         col("ZH").alias("st_code"),
         col("YMDHM").alias("tm").cast("timestamp"),
-        col("UP_SW").alias("rz").cast("decimal(7,3)"),
+        (col("UP_SW")+col("DJSZGC")).alias("rz").cast("decimal(7,3)"),
         col("RKLL").alias("inq").cast("decimal(9,3)"),
         col("XSL").alias("w").cast("decimal(9,3)"),
         lit(null).alias("blrz").cast("decimal(7,3)"),
@@ -99,7 +99,12 @@ object st_rsvr_r {
         col("LEIXING").alias("data_type").cast("int"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)")
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),
+        col("JJSW").alias("jjsw").cast("decimal(7,3)"),
+        col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
+        col("UP_SW").alias("z_gc").cast("decimal(7,3)"),
+        col("EXKEY").alias("exkey").cast("string")，
+    lit("dzp_sq").alias("data_source").cast("string"),
     )
 
     val  res_rz = spark.read.jdbc(url="jdbc:oracle:thin:@10.12.4.29:1521/meetHydro",table="HYDROKZ.ST_RSVR_R",tm.toArray,prop)
@@ -120,7 +125,12 @@ object st_rsvr_r {
         lit(1).alias("data_type").cast("int"),
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
-        lit(null).alias("yjll").cast("decimal(7,3)")
+        lit(null).alias("yjll").cast("decimal(7,3)"),
+        lit(null).alias("jjsw").cast("decimal(7,3)"),
+        lit(null).alias("djszgc").cast("decimal(7,3)"),
+        lit(null).alias("z_gc").cast("decimal(7,3)"),
+        lit(null).alias("exkey").cast("string"),
+        lit("lk").alias("data_source").cast("string"),
       ).join(sqk, Seq("guid", "st_code","tm"), "left_anti")
 
     val result = sqk.unionAll(res_rz)

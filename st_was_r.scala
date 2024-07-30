@@ -69,7 +69,7 @@ object st_was_r {
 
     import spark.implicits._
 
-    val st_list = readMD(spark,"select * from md.att_st_base").filter(col("st_type").isin("DD"))
+    val st_list = readMD(spark,"select * from md.att_st_base  where st_extsttp like '%DD%' ")
       .select(col("st_code"))
 
     val broadcastCodes: Broadcast[Array[String]] = spark.sparkContext.broadcast(st_list.as[String].collect())
@@ -124,7 +124,7 @@ object st_was_r {
         col("ZH").alias("guid"),
         col("ZH").alias("st_code"),
         col("YMDHM").alias("tm").cast("timestamp"),
-        col("UP_SW").alias("upz").cast("decimal(7,3)"),
+        (col("UP_SW")+col("DJSZGC")).alias("upz").cast("decimal(7,3)"),
         lit(null).alias("dwz").cast("decimal(7,3)"),
         col("LL").alias("tgtq").cast("decimal(9,3)"),
         lit(null).alias("swchrcd").cast("string"),
@@ -136,14 +136,20 @@ object st_was_r {
         lit(null).alias("zmqb").cast("string"),
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
-        col("YJLL").alias("yjll").cast("decimal(7,3)")
+        col("YJLL").alias("yjll").cast("decimal(7,3)"),
+        lit("dzp_sq").alias("data_source").cast("string"),
+        col("JJSW").alias("jjsw").cast("decimal(7,3)"),
+        col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
+        col("UP_SW").alias("upz_gc").cast("decimal(7,3)"),
+        lit(null).alias("dwz_gc").cast("decimal(7,3)"),
+        col("EXKEY").alias("exkey").cast("string")
       )
 
     val mergedDF = zs_sqk.join(zs_dwz,Seq("guid", "tm"),"left")
     val sqk_was = mergedDF.withColumn(
       "dwz",
       coalesce($"zs_dwz", $"dwz")
-    ).select($"guid", $"st_code",$"tm",$"upz", $"dwz",$"tgtq", $"swchrcd", $"supwptn",$"sdwwptn", $"msqmt", $"eff_time",$"data_type",$"zmqb",$"q_avg",$"xjll",$"yjll")
+    ).select($"guid", $"st_code",$"tm",$"upz", $"dwz",$"tgtq", $"swchrcd", $"supwptn",$"sdwwptn", $"msqmt", $"eff_time",$"data_type",$"zmqb",$"q_avg",$"xjll",$"yjll",$"data_source",$"jjsw",$"djszgc",$"upz_gc",$"dwz_gc",$"exkey")
 
     val yzsq = spark.read.jdbc(url="jdbc:oracle:thin:@10.12.4.29:1521/meetHydro",table="HYDROKZ.ST_WAS_R",tm.toArray,prop)
       .select(
@@ -162,7 +168,13 @@ object st_was_r {
         lit(null).alias("zmqb").cast("string"),
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
-        lit(null).alias("yjll").cast("decimal(7,3)")
+        lit(null).alias("yjll").cast("decimal(7,3)"),
+        lit("lk").alias("data_source").cast("string"),
+        lit(null).alias("jjsw").cast("decimal(7,3)"),
+        lit(null).alias("djszgc").cast("decimal(7,3)"),
+        lit(null).alias("upz_gc").cast("decimal(7,3)"),
+        lit(null).alias("dwz_gc").cast("decimal(7,3)"),
+        lit(null).alias("exkey").cast("string")
       ).join(sqk_was, Seq("guid", "st_code","tm"), "left_anti")
 
 
