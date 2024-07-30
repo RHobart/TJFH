@@ -36,7 +36,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
     var collect_tm = "2023-04-24"
 
     if(is_current.equals("true")){
-      val his_max_tm_sql_tb = """ select max(tm)-0.1 as tm from md.st_river_r where data_source is null or data_source in('dzp_sq','lk') """
+      val his_max_tm_sql_tb = """ select max(tm)-0.1 as tm from md.st_river_r where data_source is null or data_source in('dzp_sq','lk')  """
       val lastest_tm_df = readMD(spark,his_max_tm_sql_tb)
       val lastest_tm_cache = lastest_tm_df
 
@@ -74,7 +74,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
     }
     import spark.implicits._
 
-    val st_list = readMD(spark,"select * from md.att_st_base").filter(col("st_type").isin("ZZ", "ZQ"))
+    val st_list = readMD(spark,"select * from md.att_st_base where st_extsttp like '%ZZ%' or st_extsttp like '%ZQ%'")
       .select(col("st_code"))
 
     println(st_list.count())
@@ -92,7 +92,7 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         col("ZH").alias("guid"),
         col("ZH").alias("st_code"),
         col("YMDHM").alias("tm").cast("timestamp"),
-        col("UP_SW").alias("z").cast("decimal(7,3)"),
+        (col("UP_SW")+col("DJSZGC")).alias("z").cast("decimal(7,3)"),
         col("LL").alias("q").cast("decimal(9,3)"),
         lit(null).alias("xsa").cast("decimal(9,3)"),
         lit(null).alias("xsavv").cast("decimal(5,3)"),
@@ -107,7 +107,11 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         col("RJLL").alias("q_avg").cast("decimal(7,3)"),
         col("XJLL").alias("xjll").cast("decimal(7,3)"),
         col("YJLL").alias("yjll").cast("decimal(7,3)"),
-        lit("dzp_sq").alias("data_source").cast("string")
+        lit("dzp_sq").alias("data_source").cast("string"),
+        col("JJSW").alias("jjsw").cast("decimal(7,3)"),
+        col("DJSZGC").alias("djszgc").cast("decimal(7,3)"),
+        col("UP_SW").alias("z_gc").cast("decimal(7,3)"),
+        col("EXKEY").alias("exkey").cast("string")
       )
 
 
@@ -132,7 +136,11 @@ class DataWranglingScript extends BaseDataWranglingScript with IDataWranglingScr
         lit(null).alias("q_avg").cast("decimal(7,3)"),
         lit(null).alias("xjll").cast("decimal(7,3)"),
         lit(null).alias("yjll").cast("decimal(7,3)"),
-        lit("lk").alias("data_source").cast("string")
+        lit("lk").alias("data_source").cast("string"),
+        lit(null).alias("jjsw").cast("decimal(7,3)"),
+      lit(null).alias("djszgc").cast("decimal(7,3)"),
+      lit(null).alias("z_gc").cast("decimal(7,3)"),
+      lit(null).alias("exkey").cast("string")
       ).join(sqk, Seq("guid", "st_code","tm"), "left_anti")
 
     val result = sqk.unionAll(res_rz)
